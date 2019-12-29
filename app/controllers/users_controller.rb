@@ -5,10 +5,13 @@ class UsersController < ApplicationController
     end
 
     def create
+      redirect_hash = new_user_path
       user = User.new(user_params)
-      redirect_to(new_user_path) unless user.save
-      session[:user_id] = user.id
-      welcome # calling the 'welcome' action (defined below)
+      if user.save
+        redirect_hash = {action: 'welcome'}
+        session[:user_id] = user.id
+      end
+      redirect_to(redirect_hash)
     end
 
     def welcome
